@@ -134,7 +134,7 @@ ALLOWED_AUDIO_SUFFIXES = frozenset({".wav", ".mp3", ".m4a", ".mp4", ".webm", ".o
 
 
 # Optional online integrations are off unless explicitly configured.
-ENABLE_ONLINE_SIGN_LOOKUP = _env_bool("ENABLE_ONLINE_SIGN_LOOKUP", False)
+ENABLE_ONLINE_SIGN_LOOKUP = _env_bool("ENABLE_ONLINE_SIGN_LOOKUP", True)
 SIGN_LOOKUP_TIMEOUT_SECONDS = _env_float("SIGN_LOOKUP_TIMEOUT_SECONDS", 3.0, minimum=0.1)
 
 

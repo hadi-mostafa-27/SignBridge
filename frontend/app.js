@@ -1617,14 +1617,23 @@ function renderFingerspellVisual(container, clip, fallback = false) {
             row.append(guide);
             return;
         }
-        const tile = document.createElement("span");
-        tile.className = `letter-tile${step.motion_required ? " requires-motion" : ""}`;
-        tile.textContent = letter;
-        if (step.motion_required) {
-            tile.title = `${letter} requires motion and cannot be represented by a static guide`;
-            tile.setAttribute("aria-label", `${letter}, motion required; static guide unavailable`);
-        }
-        row.append(tile);
+        const tileUrl = `https://www.lifeprint.com/asl101/fingerspelling/abc-gifs/${letter.toLowerCase()}.gif`;
+        const guide = document.createElement("figure");
+        guide.className = "fingerspell-guide";
+        const image = document.createElement("img");
+        image.loading = "lazy";
+        image.decoding = "async";
+        image.src = tileUrl;
+        image.alt = `${letter} fingerspelling sign`;
+        const caption = document.createElement("figcaption");
+        caption.textContent = letter;
+        image.addEventListener("error", () => {
+            guide.classList.add("is-unavailable");
+            image.remove();
+            caption.textContent = letter;
+        }, { once: true });
+        guide.append(image, caption);
+        row.append(guide);
     });
     container.append(label, row);
     if (steps.some((step) => step?.motion_required)) {
@@ -2897,6 +2906,47 @@ function bindEvents() {
     DOM.retryBackend.addEventListener("click", retryBackend);
     DOM.startCamera.addEventListener("click", startCamera);
     DOM.stopCamera.addEventListener("click", () => stopCamera(true));
+    const videoUpload = document.getElementById("video-upload");
+    if (videoUpload) {
+        videoUpload.addEventListener("change", async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (state.cameraStarting || state.cameraRunning) stopCamera(false);
+            
+            primeAudioFeedback();
+            state.cameraStarting = true;
+            setCameraStatus("Loading video", "checking");
+            setSystemMessage("Video loaded. Processing frames.");
+            updateControls();
+
+            try {
+                const videoURL = URL.createObjectURL(file);
+                DOM.webcam.srcObject = null;
+                DOM.webcam.src = videoURL;
+                DOM.webcam.loop = true;
+                await waitForVideoMetadata();
+                await DOM.webcam.play();
+
+                state.cameraRunning = true;
+                state.lastHolisticRequestAt = 0;
+                state.fpsFrames = 0;
+                DOM.cameraPlaceholder.classList.add("is-hidden");
+                setCameraStatus("Playing Video", "online");
+                state.cameraAnimationFrame = window.requestAnimationFrame(processCameraFrame);
+                if (state.mode === "words") await prepareWordTracking();
+                renderKeyboard();
+            } catch (error) {
+                stopMediaTracks();
+                const message = friendlyCameraError(error);
+                setCameraStatus(message, "error");
+                setSystemMessage(message, "error");
+            } finally {
+                state.cameraStarting = false;
+                updateControls();
+                videoUpload.value = "";
+            }
+        });
+    }
     DOM.modeAlphabet.addEventListener("click", () => setMode("alphabet"));
     DOM.modeWords.addEventListener("click", () => setMode("words"));
     DOM.startWordCapture.addEventListener("click", startWordCapture);

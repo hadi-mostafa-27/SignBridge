@@ -14,7 +14,7 @@ Whether you want to type with your hands using our smart Sign-to-Text keyboard o
 
 * **🔤 Sign-to-Text Keyboard**: A real-time, conservative alphabet recognizer using a verified MediaPipe + Random Forest pipeline. Includes a 1-second cooldown, custom motion-detection for dynamic letters (`J`, `Z`), and distinct audio feedback.
 * **🧠 Smart Autocomplete**: As you sign, a local quantized DistilGPT2 neural model predicts your next words, augmented by Google Web 1T n-gram statistics.
-* **🎙️ Voice & Text to Sign**: Speak into your microphone (transcribed locally via Whisper) or type text to generate an ordered sequence of sign concepts. Supports verified native sign videos and deterministic fingerspelling fallbacks.
+* **🎙️ Voice & Text to Sign**: Speak into your microphone (transcribed locally via Whisper) or type text to generate an ordered sequence of sign concepts. It seamlessly fetches native ASL video clips from online dictionaries, falling back to ASL alphabet cartoon images for spelled letters.
 * **✨ Neon UI**: Features a beautiful, responsive frontend that overlays "cool" neon, glowing, and pulsating skeletal keypoints directly over your live camera feed.
 * **🔒 100% Local & Private**: No cloud dependencies. All models, from computer vision to Whisper speech recognition, run locally on your machine.
 
@@ -82,8 +82,8 @@ python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
 ## 🎮 How to Use
 
 ### Sign Keyboard (Alphabet Mode)
-1. Select **Alphabet Mode** and click **Start Camera**. (Allow camera permissions).
-2. Present one handshape at a time to the camera. You will see the neon glowing keypoints map to your hand!
+1. Select **Alphabet Mode** and click **Start Camera** (Allow camera permissions), or click **Import Video** to upload a pre-recorded video to be translated.
+2. Present one handshape at a time to the camera (or video). You will see the neon glowing keypoints map to your hand!
 3. The letter will lock in, a short tone will play, and the system will wait 1 second before accepting the next letter.
 4. Lower your hand to re-arm repeated letters (e.g., spelling "LL").
 5. Use the arrow keys or click to select autocomplete suggestions.
@@ -91,7 +91,7 @@ python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
 ### Voice/Text to Sign
 1. Navigate to the second page of the app.
 2. Type a sentence or click **Start Recording** to speak into your microphone.
-3. The system will process your input and display an ordered sequence of sign concepts. If a native video exists in our database, it will play; otherwise, a deterministic skeletal fallback guide will be shown.
+3. The system will process your input and display an ordered sequence of sign concepts. It dynamically fetches high-quality native ASL video clips from online dictionaries for translated words. If a word isn't available, it falls back to displaying ASL alphabet cartoon images for each spelled letter.
 
 ---
 
