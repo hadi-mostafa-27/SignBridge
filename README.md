@@ -1,5 +1,5 @@
-```markdown
 # SignBridge
+<img width="1308" height="488" alt="Screenshot 2026-08-19 000507" src="https://github.com/user-attachments/assets/63dd079e-9156-42bf-a82e-58eb1d73ce6f" />
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.141-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
